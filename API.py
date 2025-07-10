@@ -5,14 +5,15 @@ from flask import Flask, jsonify
 app = Flask(__name__)
 
 
-@app.route("/CadastroUsuario", methods=["GET"])
+@app.route("/CadastroUsuario", methods=[""])
 def listar_Cadastros():
     conn = conectar()
     #conn.execute("PRAGMA foreign_keys = ON") #ativa as chaves estrangeiras das tabelas (pois, não é ativado por padrão)
     cursor = conn.cursor()
-    cursor.execute("SELECT IDCadastroUsuario, NomeUsuario, SenhaUsuario, SetorUsuario FROM CadastroUsuario")
+    cursor.execute("INSERT INTO CadastroUsuario (Email, Senha) VALUES (?, ?)")
+    conn.commit()
     dados = [
-        {"id": row[0], "NomeUsuario": row[1], "SenhaUsuario": row[2], "SetorUsuario": row[3]}
+        {"id": row[0], "Email": row[1], "Senha": row[2]}
         for row in cursor.fetchall()
     ]
     conn.close()
@@ -20,4 +21,3 @@ def listar_Cadastros():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
